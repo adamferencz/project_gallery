@@ -22,6 +22,7 @@
       max-width: 1200px;
       margin: 0 auto;
     }
+    
     .tile {
       background: white;
       border-radius: 8px;
@@ -92,6 +93,30 @@
       overflow-y: auto;
     }
     @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+        padding: 4px;
+      }
+      .tile {
+        margin: 0;
+        border-radius: 0;
+      }
+      .tile-title {
+        font-size: 15px;
+        padding: 4px;
+      }
+      .tile-authors {
+        font-size: 12px;
+        padding: 0 4px 4px;
+      }
+      .tile-id-circle {
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        top: 4px;
+        left: 4px;
+      }
       .modal-content {
         max-width: 98vw;
         width: 98vw;
