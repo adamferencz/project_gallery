@@ -195,13 +195,13 @@
         const grid = document.getElementById('projectGrid');
         rows.slice(1).forEach(row => {
           const obj = Object.fromEntries(headers.map((h, i) => [h, row[i]]));
-          console.log(obj);
+          // Removed console.log to avoid leaking debugging information
           
           const tile = document.createElement('div');
           tile.className = 'tile';
           tile.innerHTML = `
             <div class="tile-id-circle">${obj.id || ''}</div>
-            <img src="${convertToThumbnailURL(obj.thumbnail)}" alt="">
+            <img src="${convertToThumbnailURL(obj.thumbnail)}" alt="Thumbnail of ${obj.name}">
             <div class="tile-title">${obj.name}</div>
             <div class="tile-authors">${obj.author1}${obj.author2 ? ' & ' + obj.author2 : ''}</div>
           `;
@@ -233,7 +233,7 @@
           }
         } else if (obj.video.includes('drive.google.com')) {
           // Google Drive video
-          const match = obj.video.match(/\/d\/([aA-zZ0-9_-]{25,})/);
+          const match = obj.video.match(/\/d\/([a-zA-Z0-9_-]{25,})/);
           if (match) {
             const videoId = match[1];
             videoFrame = `<div id="modalVideoFrame" style="margin:16px 0;"><iframe width="100%" height="315" src="https://drive.google.com/file/d/${videoId}/preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
