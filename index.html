@@ -1,255 +1,396 @@
 <!DOCTYPE html>
 <html lang="cs">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Galerie projektů IT 2025</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      background: #f7f7f7;
-    }
-    h1 {
-      text-align: center;
-      padding: 1em 0;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 16px;
-      padding: 16px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    .tile {
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.2s;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: relative;
-    }
-    .tile:hover {
-      transform: scale(1.02);
-    }
-    .tile img {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
-    }
-    .tile-title {
-      padding: 8px;
-      font-weight: bold;
-      text-align: center;
-    }
-    .tile-authors {
-      padding: 0 8px 8px;
-      font-size: 14px;
-      text-align: center;
-      color: #555;
-      margin-bottom: 8px;
-    }
-    .tile-id-circle {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      width: 32px;
-      height: 32px;
-      background: #1976d2;
-      color: #fff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 16px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      z-index: 2;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.7);
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-content {
-      background: white;
-      max-width: 600px;
-      width: 95vw;
-      box-sizing: border-box;
-      padding: 20px;
-      border-radius: 8px;
-      position: relative;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    @media (max-width: 600px) {
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 4px;
-        padding: 4px;
-      }
-      .tile {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Galerie projektů IT 2025</title>
+    <style>
+      body {
+        font-family: sans-serif;
         margin: 0;
-        border-radius: 0;
+        background: #f7f7f7;
+      }
+      h1 {
+        text-align: center;
+        padding: 1em 0;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 16px;
+        padding: 16px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .tile {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.2s;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        position: relative;
+      }
+      .tile:hover {
+        transform: scale(1.02);
+      }
+      .tile img {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
       }
       .tile-title {
-        font-size: 15px;
-        padding: 4px;
+        padding: 8px;
+        font-weight: bold;
+        text-align: center;
       }
       .tile-authors {
-        font-size: 12px;
-        padding: 0 4px 4px;
+        padding: 0 8px 8px;
+        font-size: 14px;
+        text-align: center;
+        color: #555;
+        margin-bottom: 8px;
       }
       .tile-id-circle {
-        width: 24px;
-        height: 24px;
-        font-size: 12px;
-        top: 4px;
-        left: 4px;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 32px;
+        height: 32px;
+        background: #1976d2;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 16px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        z-index: 2;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
       }
       .modal-content {
-        max-width: 98vw;
-        width: 98vw;
-        padding: 10px;
-        border-radius: 0 0 8px 8px;
-        top: 0;
-        left: 0;
-        right: 0;
-        max-height: 95vh;
+        background: white;
+        max-width: 600px;
+        width: 95vw;
+        box-sizing: border-box;
+        padding: 20px;
+        border-radius: 8px;
+        position: relative;
+        max-height: 90vh;
+        overflow-y: auto;
       }
-      .modal-close {
-        right: 8px;
-        top: 8px;
-        font-size: 28px;
-      }
-    }
-    .modal-close {
-      position: absolute;
-      right: 16px;
-      top: 16px;
-      font-size: 18px;
-      cursor: pointer;
-    }
-    .links a {
-      margin-right: 10px;
-      text-decoration: none;
-      font-size: 20px;
-    }
-    .test-embed {
-      max-width: 600px;
-      margin: 1em auto;
-      padding: 1em;
-      background: #fff3cd;
-      border: 1px solid #ffeeba;
-      border-radius: 8px;
-    }
-    .abstract-box {
-      background: #f0f4ff;
-      border-left: 4px solid #1976d2;
-      padding: 12px;
-      margin: 16px 0 8px 0;
-      border-radius: 4px;
-      font-style: italic;
-      color: #222;
-    }
-  </style>
-</head>
-<body>
-  <h1>Galerie projektů IT 2025</h1>
-
-  <div class="grid" id="projectGrid"></div>
-
-  <div class="modal" id="modal">
-    <div class="modal-content">
-      <span class="modal-close" onclick="closeModal()">&times;</span>
-      <h2 id="modalTitle"></h2>
-      <p id="modalAuthors"></p>
-      <div class="links" id="modalLinks"></div>
-      <p id="modalAbstract"></p>
-    </div>
-  </div>
-
-  <script>
-    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQp0IJkWeo9j-fQ57O08y1ricx-xhaur2LjcTr5wm1Ip0pah1RzmMnmKu9YaPKEzO9-3dbXRjnDA3uS/pub?output=tsv';
-
-    function convertToThumbnailURL(url) {
-      const idMatch = url.match(/(?:id=|\/d\/)([a-zA-Z0-9_-]{25,})/);
-      return idMatch ? `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=s800` : url;
-    }
-
-    fetch(sheetUrl)
-      .then(res => res.text())
-      .then(text => {
-        const rows = text.trim().split('\n').map(r => r.split('\t'));
-        const headers = rows[0].map(h => h.trim());
-        const grid = document.getElementById('projectGrid');
-        rows.slice(1).forEach(row => {
-          const obj = Object.fromEntries(headers.map((h, i) => [h, row[i]]));
-          // Removed console.log to avoid leaking debugging information
-          
-          const tile = document.createElement('div');
-          tile.className = 'tile';
-          tile.innerHTML = `
-            <div class="tile-id-circle">${obj.id || ''}</div>
-            <img src="${convertToThumbnailURL(obj.thumbnail)}" alt="Thumbnail of ${obj.name}">
-            <div class="tile-title">${obj.name}</div>
-            <div class="tile-authors">${obj.author1}${obj.author2 ? ' & ' + obj.author2 : ''}</div>
-          `;
-          tile.onclick = () => openModal(obj);
-          grid.appendChild(tile);
-        });
-      });
-
-    function openModal(obj) {
-      document.getElementById('modalTitle').innerText = obj.name;
-      document.getElementById('modalAuthors').innerText = obj.author1 + (obj.author2 ? (' & ' + obj.author2) : '');
-      let links = '';
-      if (obj.paper) links += `<a href="${obj.paper}" target="_blank" title="Stáhnout paper">📄</a>`;
-      if (obj.poster) links += `<a href="${obj.poster}" target="_blank" title="Stáhnout poster">📊</a>`;
-      if (obj.video) links += `<a href="${obj.video}" target="_blank" title="Otevřít video">🎥</a>`;
-      document.getElementById('modalLinks').innerHTML = links;
-      document.getElementById('modalAbstract').innerHTML = `<div class=\"abstract-box\">${obj.abstract || 'Bez abstraktu'}</div>`;
-
-      // Video iframe (YouTube nebo Google Drive)
-      let videoFrame = '';
-      if (obj.video) {
-        if (obj.video.includes('youtube.com') || obj.video.includes('youtu.be')) {
-          // YouTube URL
-          let videoId = '';
-          const ytMatch = obj.video.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);
-          if (ytMatch) videoId = ytMatch[1];
-          if (videoId) {
-            videoFrame = `<div id="modalVideoFrame" style="margin:16px 0;"><iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
-          }
-        } else if (obj.video.includes('drive.google.com')) {
-          // Google Drive video
-          const match = obj.video.match(/\/d\/([a-zA-Z0-9_-]{25,})/);
-          if (match) {
-            const videoId = match[1];
-            videoFrame = `<div id="modalVideoFrame" style="margin:16px 0;"><iframe width="100%" height="315" src="https://drive.google.com/file/d/${videoId}/preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
-          }
+      @media (max-width: 600px) {
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 4px;
+          padding: 4px;
+        }
+        .tile {
+          margin: 0;
+          border-radius: 0;
+        }
+        .tile-title {
+          font-size: 15px;
+          padding: 4px;
+        }
+        .tile-authors {
+          font-size: 12px;
+          padding: 0 4px 4px;
+        }
+        .tile-id-circle {
+          width: 24px;
+          height: 24px;
+          font-size: 12px;
+          top: 4px;
+          left: 4px;
+        }
+        .modal-content {
+          max-width: 98vw;
+          width: 98vw;
+          padding: 10px;
+          border-radius: 0 0 8px 8px;
+          top: 0;
+          left: 0;
+          right: 0;
+          max-height: 95vh;
+        }
+        .modal-close {
+          right: 8px;
+          top: 8px;
+          font-size: 28px;
         }
       }
-      document.getElementById('modalAbstract').insertAdjacentHTML('afterend', videoFrame);
-      document.getElementById('modal').style.display = 'flex';
-    }
+      .modal-close {
+        position: absolute;
+        right: 16px;
+        top: 16px;
+        font-size: 18px;
+        cursor: pointer;
+      }
+      .links a {
+        margin-right: 10px;
+        text-decoration: none;
+        font-size: 20px;
+      }
+      .test-embed {
+        max-width: 600px;
+        margin: 1em auto;
+        padding: 1em;
+        background: #fff3cd;
+        border: 1px solid #ffeeba;
+        border-radius: 8px;
+      }
+      .abstract-box {
+        background: #f0f4ff;
+        border-left: 4px solid #1976d2;
+        padding: 12px;
+        margin: 16px 0 8px 0;
+        border-radius: 4px;
+        font-style: italic;
+        color: #222;
+      }
+      .tile-warning {
+        color: #d32f2f;
+        font-size: 1.2em;
+        margin-left: 6px;
+        vertical-align: middle;
+        cursor: help;
+      }
+      .missing-summary-box {
+        background: #fff3cd;
+        border: 1px solid #ffeeba;
+        border-radius: 8px;
+        padding: 12px 18px;
+        margin-bottom: 16px;
+        font-size: 1em;
+        color: #856404;
+      }
+      .missing-summary-box ul {
+        margin: 0 0 0 1.2em;
+        padding: 0;
+      }
+      .missing-summary-box li {
+        margin-bottom: 2px;
+      }
+      .tile-img-wrap {
+        position: relative;
+        width: 100%;
+      }
+      .tile-missing-chips {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px;
+        padding: 2px;
+        z-index: 3;
+        pointer-events: none;
+      }
+      .tile-missing-chip {
+        background: #d32f2f;
+        color: #fff;
+        font-size: 10px;
+        border-radius: 6px;
+        padding: 1px 6px;
+        margin-right: 2px;
+        margin-bottom: 2px;
+        opacity: 0.92;
+        pointer-events: none;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+        white-space: nowrap;
+      }
+      .tile-missing-img {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        background: #d32f2f;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        position: relative;
+        min-height: 80px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Galerie projektů IT 2025</h1>
+    <div
+      id="missingSummary"
+      style="max-width: 1200px; margin: 0 auto 1em auto"
+    ></div>
 
-    function closeModal() {
-      document.getElementById('modal').style.display = 'none';
-      // Odebrat iframe s videem při zavření modalu
-      const oldFrame = document.getElementById('modalVideoFrame');
-      if (oldFrame) oldFrame.remove();
-    }
-  </script>
-</body>
+    <div class="grid" id="projectGrid"></div>
+
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle"></h2>
+        <p id="modalAuthors"></p>
+        <div class="links" id="modalLinks"></div>
+        <p id="modalAbstract"></p>
+      </div>
+    </div>
+
+    <script>
+      const sheetUrl =
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vQp0IJkWeo9j-fQ57O08y1ricx-xhaur2LjcTr5wm1Ip0pah1RzmMnmKu9YaPKEzO9-3dbXRjnDA3uS/pub?output=tsv";
+
+      function convertToThumbnailURL(url) {
+        const idMatch = url.match(/(?:id=|\/d\/)([a-zA-Z0-9_-]{25,})/);
+        return idMatch
+          ? `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=s800`
+          : url;
+      }
+
+      fetch(sheetUrl)
+        .then((res) => res.text())
+        .then((text) => {
+          const rows = text
+            .trim()
+            .split("\n")
+            .map((r) => r.split("\t"));
+          const headers = rows[0].map((h) => h.trim());
+          const grid = document.getElementById("projectGrid");
+          const missingSummary = document.getElementById("missingSummary");
+          let missingList = [];
+          // Ošetření prázdných hodnot (null, undefined, prázdný string, mezery)
+          function isMissing(val) {
+            return !val || (typeof val === "string" && val.trim() === "");
+          }
+          rows.slice(1).forEach((row, idx) => {
+            const obj = Object.fromEntries(headers.map((h, i) => [h, row[i]]));
+            let missing = [];
+            if (isMissing(obj.name)) missing.push("název");
+            if (isMissing(obj.author1)) missing.push("autor1");
+            if (isMissing(obj.thumbnail)) missing.push("náhled");
+            if (isMissing(obj.abstract)) missing.push("abstrakt");
+            if (isMissing(obj.paper)) missing.push("paper");
+            if (isMissing(obj.poster)) missing.push("poster");
+            if (isMissing(obj.video)) missing.push("video");
+            if (isMissing(obj.id)) missing.push("ID");
+            if (missing.length > 0) {
+              missingList.push(
+                `<li><strong>${
+                  obj.name && obj.name.trim()
+                    ? obj.name
+                    : "Projekt #" + (idx + 1)
+                }</strong>: chybí ${missing.join(", ")}</li>`
+              );
+            }
+            const tile = document.createElement("div");
+            tile.className = "tile";
+            let warning = "";
+            if (missing.length > 0) {
+              warning = `<span class="tile-warning" title="Chybí: ${missing.join(
+                ", "
+              )}">❗</span>`;
+            }
+            let chips = "";
+            if (missing.length > 0) {
+              chips = `<div class="tile-missing-chips">${missing
+                .map((m) => `<span class='tile-missing-chip'>${m}</span>`)
+                .join("")}</div>`;
+            }
+            let imgHtml = "";
+            if (isMissing(obj.thumbnail)) {
+              imgHtml = `<div class='tile-missing-img' title='Chybí náhled'>${chips}</div>`;
+            } else {
+              imgHtml = `<div class='tile-img-wrap'>
+                <img src="${convertToThumbnailURL(
+                  obj.thumbnail
+                )}" alt="Thumbnail of ${obj.name}">
+                ${chips}
+              </div>`;
+            }
+            tile.innerHTML = `
+            <div class="tile-id-circle">${obj.id || ""}</div>
+            ${imgHtml}
+            <div class="tile-title">${obj.name || ""}</div>
+            <div class="tile-authors">${obj.author1 || ""}${
+              obj.author2 ? " & " + obj.author2 : ""
+            }</div>
+          `;
+            tile.onclick = () => openModal(obj);
+            grid.appendChild(tile);
+          });
+          if (missingList.length > 0) {
+            missingSummary.innerHTML = `<div class='missing-summary-box'><b>Chybějící údaje v projektech:</b><ul>${missingList.join(
+              ""
+            )}</ul></div>`;
+          } else {
+            missingSummary.innerHTML = "";
+          }
+        });
+
+      function openModal(obj) {
+        document.getElementById("modalTitle").innerText = obj.name;
+        document.getElementById("modalAuthors").innerText =
+          obj.author1 + (obj.author2 ? " & " + obj.author2 : "");
+        let links = "";
+        if (obj.paper)
+          links += `<a href="${obj.paper}" target="_blank" title="Stáhnout paper">📄</a>`;
+        if (obj.poster)
+          links += `<a href="${obj.poster}" target="_blank" title="Stáhnout poster">📊</a>`;
+        if (obj.video)
+          links += `<a href="${obj.video}" target="_blank" title="Otevřít video">🎥</a>`;
+        document.getElementById("modalLinks").innerHTML = links;
+        document.getElementById(
+          "modalAbstract"
+        ).innerHTML = `<div class=\"abstract-box\">${
+          obj.abstract || "Bez abstraktu"
+        }</div>`;
+
+        // Video iframe (YouTube nebo Google Drive)
+        let videoFrame = "";
+        if (obj.video) {
+          if (
+            obj.video.includes("youtube.com") ||
+            obj.video.includes("youtu.be")
+          ) {
+            // YouTube URL
+            let videoId = "";
+            const ytMatch = obj.video.match(
+              /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/
+            );
+            if (ytMatch) videoId = ytMatch[1];
+            if (videoId) {
+              videoFrame = `<div id="modalVideoFrame" style="margin:16px 0;"><iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
+            }
+          } else if (obj.video.includes("drive.google.com")) {
+            // Google Drive video
+            const match = obj.video.match(/\/d\/([a-zA-Z0-9_-]{25,})/);
+            if (match) {
+              const videoId = match[1];
+              videoFrame = `<div id="modalVideoFrame" style="margin:16px 0;"><iframe width="100%" height="315" src="https://drive.google.com/file/d/${videoId}/preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
+            }
+          }
+        }
+        document
+          .getElementById("modalAbstract")
+          .insertAdjacentHTML("afterend", videoFrame);
+        document.getElementById("modal").style.display = "flex";
+      }
+
+      function closeModal() {
+        document.getElementById("modal").style.display = "none";
+        // Odebrat iframe s videem při zavření modalu
+        const oldFrame = document.getElementById("modalVideoFrame");
+        if (oldFrame) oldFrame.remove();
+      }
+    </script>
+  </body>
 </html>
