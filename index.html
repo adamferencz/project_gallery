@@ -224,26 +224,192 @@
         position: relative;
         min-height: 80px;
       }
+      #main-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        background: #f7f7f7;
+        z-index: 100;
+        max-width: 100vw;
+        display: flex;
+        gap: 1.5em;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 -2px 8px #0001;
+        padding-top: 1em;
+        padding-bottom: 1em;
+      }
+      #main-nav a,
+      #main-nav button {
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: bold;
+        text-decoration: none;
+        box-shadow: 0 1px 4px #0001;
+        cursor: pointer;
+      }
+      #main-nav a {
+        display: inline-block;
+      }
+      #main-nav button {
+        background: #1976d2;
+        color: white;
+        border: none;
+        font-size: 1em;
+      }
     </style>
   </head>
-  <body>
+  <body style="margin: 0">
     <h1>Galerie projektů IT 2025</h1>
-    <div
-      id="missingSummary"
-      style="max-width: 1200px; margin: 0 auto 1em auto"
-    ></div>
+    <div style="width: 100%; background: #f7f7f7">
+      <div
+        id="main-nav"
+        style="
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          width: 100vw;
+          background: #f7f7f7;
+          z-index: 100;
+          max-width: 100vw;
+          display: flex;
+          gap: 1.5em;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 -2px 8px #0001;
+          padding-top: 1em;
+          padding-bottom: 1em;
+        "
+      >
+        <a
+          href="student.html"
+          style="
+            background: #eaf4ff;
+            color: #1976d2;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 1px 4px #0001;
+          "
+          >🧑‍🎓 Manuál pro studenty</a
+        >
+        <a
+          href="hodnotitel.html"
+          style="
+            background: #fff3cd;
+            color: #b8860b;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 1px 4px #0001;
+          "
+          >📝 Manuál pro hodnotitele</a
+        >
+        <button
+          onclick="voteAccess()"
+          style="
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            box-shadow: 0 1px 4px #0001;
+          "
+        >
+          Hlasovat o nejlepší projekt
+        </button>
+      </div>
+      <div
+        id="missingSummary"
+        style="max-width: 1200px; margin: 0 auto 1em auto"
+      ></div>
 
-    <div class="grid" id="projectGrid"></div>
+      <div class="grid" id="projectGrid"></div>
+    </div>
 
     <div class="modal" id="modal">
       <div class="modal-content">
         <span class="modal-close" onclick="closeModal()">&times;</span>
         <h2 id="modalTitle"></h2>
         <p id="modalAuthors"></p>
-        <div class="links" id="modalLinks"></div>
+        <div
+          class="links"
+          id="modalLinks"
+          style="display: inline-block; vertical-align: middle"
+        ></div>
+        <div
+          id="modalTopGrades"
+          style="
+            display: inline-flex;
+            align-items: center;
+            margin-left: 10px;
+            vertical-align: middle;
+          "
+        ></div>
+
+        <div id="modalGrades" style="margin: 10px 0 0 0"></div>
         <p id="modalAbstract"></p>
+        <div
+          id="modalFeedbackPopup"
+          style="
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <div
+            style="
+              background: white;
+              max-width: 500px;
+              width: 90vw;
+              max-height: 70vh;
+              overflow-y: auto;
+              border-radius: 8px;
+              padding: 20px;
+              position: relative;
+            "
+          >
+            <span
+              id="closeFeedbackPopup"
+              style="
+                position: absolute;
+                right: 16px;
+                top: 8px;
+                font-size: 22px;
+                cursor: pointer;
+              "
+              >&times;</span
+            >
+            <h3 style="margin-top: 0">Zpětná vazba</h3>
+            <div id="modalFeedbackText" style="white-space: pre-line"></div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <script>
+      function voteAccess() {
+        const pwd = prompt("Zadejte heslo pro hlasování:");
+        if (pwd === "hlas2025") {
+          window.open("https://forms.gle/nqRqMo2nXfiBP4Eu9", "_blank");
+        } else if (pwd !== null) {
+          alert("Nesprávné heslo. Přístup zamítnut.");
+        }
+      }
+    </script>
 
     <script>
       const sheetUrl =
@@ -348,6 +514,73 @@
         if (obj.video)
           links += `<a href="${obj.video}" target="_blank" title="Otevřít video">🎥</a>`;
         document.getElementById("modalLinks").innerHTML = links;
+
+        // --- REPORT ZNÁMKY + FINÁLNÍ ZNÁMKA ---
+        const reportGrades = [
+          { label: "R1", value: obj.r1 },
+          { label: "R2", value: obj.r2 },
+          { label: "R3", value: obj.r3 },
+          { label: "R4", value: obj.r4 },
+        ];
+        let reportHtml = `<table style='display:inline-table; border-collapse:collapse; font-size:13px; background:#f8fafd; border-radius:6px; box-shadow:0 1px 3px #0001; margin-left:10px;'><tr>${reportGrades
+          .map(
+            (g) =>
+              `<th title='${g.label}' style='padding:2px 8px; border-bottom:1px solid #e0e0e0;'>${g.label}</th>`
+          )
+          .join("")}</tr><tr>${reportGrades
+          .map(
+            (g) =>
+              `<td style='padding:2px 8px; text-align:center;'>${
+                g.value || "-"
+              }</td>`
+          )
+          .join("")}</tr></table>`;
+        let finalHtml = `<div style='display:inline-block; margin-left:16px; text-align:center;'>
+          <div style='font-size:11px; color:#888; margin-bottom:2px;'>finální známka</div>
+          <span style='display:inline-block; background:#ffeaea; color:#d32f2f; border-radius:16px; padding:4px 16px; font-size:1.1em; font-weight:bold;'>${
+            obj.final_10 || "-"
+          }</span>
+        </div>`;
+        let feedbackHtml = `<div style='display:inline-block; margin-left:16px; text-align:center;'>
+          <div style='font-size:11px; color:#888; margin-bottom:2px;'>zpětná vazba</div>
+          <span style='display:inline-block; background:#eaf4ff; color:#1976d2; border-radius:16px; padding:4px 16px; font-size:1.1em; font-weight:bold; cursor:pointer;' id='modalFeedbackIcon' title='Zobrazit zpětnou vazbu'>💬</span>
+          <div id='modalFeedbackPopup' style='display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:10000; justify-content:center; align-items:center;'>
+            <div style='background:white; max-width:500px; width:90vw; max-height:70vh; overflow-y:auto; border-radius:8px; padding:20px; position:relative;'>
+              <span id='closeFeedbackPopup' style='position:absolute; right:16px; top:8px; font-size:22px; cursor:pointer;'>&times;</span>
+              <h3 style='margin-top:0;'>Zpětná vazba</h3>
+              <div id='modalFeedbackText' style='white-space:pre-line;'></div>
+            </div>
+          </div>
+        </div>`;
+        document.getElementById("modalTopGrades").innerHTML =
+          reportHtml + finalHtml + feedbackHtml;
+
+        // --- ČÁSTEČNÉ ZNÁMKY + ZPĚTNÁ VAZBA ---
+        const partialGrades = [
+          { label: "Deadlines", value: obj.deadlines_2, weight: 2 },
+          { label: "Paper", value: obj.paper_3, weight: 3 },
+          { label: "Poster", value: obj.poster_1, weight: 1 },
+          { label: "Video", value: obj.video_2, weight: 2 },
+          { label: "Activity", value: obj.activity_2, weight: 2 },
+          { label: "Konference", value: obj.conference_2, weight: 2 },
+        ];
+        let gradesHtml = `<div style='display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start;'>
+      <table style='border-collapse:collapse; font-size:13px; background:#f8fafd; border-radius:6px; box-shadow:0 1px 3px #0001;'><tr>${partialGrades
+        .map(
+          (g) =>
+            `<th title='${g.label}' style='padding:2px 8px; border-bottom:1px solid #e0e0e0;'>${g.label}<span style='color:#888;font-size:11px;'> (${g.weight})</span></th>`
+        )
+        .join("")}</tr><tr>${partialGrades
+          .map(
+            (g) =>
+              `<td style='padding:2px 8px; text-align:center;'>${
+                g.value || "-"
+              }</td>`
+          )
+          .join("")}</tr></table>
+    </div>`;
+        document.getElementById("modalGrades").innerHTML = gradesHtml;
+
         document.getElementById(
           "modalAbstract"
         ).innerHTML = `<div class=\"abstract-box\">${
@@ -383,6 +616,23 @@
           .getElementById("modalAbstract")
           .insertAdjacentHTML("afterend", videoFrame);
         document.getElementById("modal").style.display = "flex";
+
+        // --- FEEDBACK POPUP ---
+        const feedbackIcon = document.getElementById("modalFeedbackIcon");
+        const feedbackPopup = document.getElementById("modalFeedbackPopup");
+        const feedbackText = document.getElementById("modalFeedbackText");
+        const closeFeedback = document.getElementById("closeFeedbackPopup");
+        feedbackText.innerText = obj.written_feedback || "(Žádná zpětná vazba)";
+        feedbackIcon.onclick = function (e) {
+          feedbackPopup.style.display = "flex";
+          e.stopPropagation();
+        };
+        closeFeedback.onclick = function () {
+          feedbackPopup.style.display = "none";
+        };
+        feedbackPopup.onclick = function (e) {
+          if (e.target === feedbackPopup) feedbackPopup.style.display = "none";
+        };
       }
 
       function closeModal() {
