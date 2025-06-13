@@ -309,7 +309,7 @@
           >📝 Manuál pro hodnotitele</a
         >
         <button
-          onclick="voteAccess()"
+          onclick="window.open('https://forms.gle/nqRqMo2nXfiBP4Eu9', '_blank');"
           style="
             background: #1976d2;
             color: white;
@@ -399,17 +399,6 @@
         </div>
       </div>
     </div>
-
-    <script>
-      function voteAccess() {
-        const pwd = prompt("Zadejte heslo pro hlasování:");
-        if (pwd === "hlas2025") {
-          window.open("https://forms.gle/nqRqMo2nXfiBP4Eu9", "_blank");
-        } else if (pwd !== null) {
-          alert("Nesprávné heslo. Přístup zamítnut.");
-        }
-      }
-    </script>
 
     <script>
       const sheetUrl =
